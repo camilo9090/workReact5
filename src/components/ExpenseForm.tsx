@@ -1,7 +1,20 @@
-import { categories } from "../data/caategories";
+import { categories } from "../data/categories";
+import DatePicker from 'react-date-picker';
+import { DraftExpense } from "../types";
+import { useState } from "react";
+import 'react-calendar/dist/Calendar.css'
+import'react-date-picker/dist/DatePicker.css'
 
 
 export default function ExpenseForm() {
+
+  const [expense,setexpense]=useState<DraftExpense>({
+    amount:0,
+    expenseName:'',
+    category:'',
+    date:new Date()
+
+  })
   return (
     <form className="space-y-5" action="">
 
@@ -20,7 +33,8 @@ export default function ExpenseForm() {
           type="text"
           placeholder="Añade el Nombre del Gasto"
           className="bg-slate-100 p-2"
-          name="expenseName" />
+          name="expenseName"
+          value={expense.expenseName} />
       </div>
       <div className="flex flex-col gap-2">
 
@@ -32,7 +46,8 @@ export default function ExpenseForm() {
           type="number"
           placeholder="Añade la cantidad del Gasto ej.300"
           className="bg-slate-100 p-2"
-          name="amount" />
+          name="amount"
+          value={expense.amount} />
       </div>
 
       <div className="flex flex-col gap-2">
@@ -44,22 +59,32 @@ export default function ExpenseForm() {
           id="category"
           className="bg-slate-100 p-2"
           name="category"
+          value={expense.category}
         >
           <option value="">-- Seleccione --</option>
           {categories.map(cat => (
             <option
               key={cat.id}
               value={cat.id}>
-              
               {cat.name}
             </option>
           ))}
         </select>
       </div>
+      <div className="flex flex-col gap-2">
+
+        <label className="text-xl" htmlFor="amount">
+          Faecha Gasto:
+        </label>
+        <DatePicker
+          className="bg-slate-100 p-2 border-0"
+          value={expense.date}
+        />
+      </div>
       <input type="submit"
-      className="bg-blue-600 cursor-pointer w-full p-2 text-white uppercase
+        className="bg-blue-600 cursor-pointer w-full p-2 text-white uppercase
       font-bold rounded-lg"
-      value={'Registrar Gasto'} />
+        value={'Registrar Gasto'} />
     </form>
   )
 }
