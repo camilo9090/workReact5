@@ -1,6 +1,7 @@
 import { categories } from "../data/categories"
 import { formantDate } from "../helpers"
 import { Expense } from "../types"
+import { useBudget } from "../hooks/useBudget"
 import AmountDisplay from "./AmountDisplay"
 import { useMemo } from 'react'
 import {
@@ -18,6 +19,7 @@ type ExpenseDetailsProps = {
 }
 export default function ExpenseDetails({ expense }: ExpenseDetailsProps) {
 
+  const {dispatch}=useBudget()
   const categotyInfo = useMemo(() => categories.filter(cat => cat.id === expense.category)[0], [expense])
   const leadingActions=()=>(
     <LeadingActions>
@@ -32,7 +34,7 @@ export default function ExpenseDetails({ expense }: ExpenseDetailsProps) {
   const trailingActions=()=>(
     <TrailingActions>
       <SwipeAction
-      onClick={()=>{}}
+      onClick={()=>{dispatch({type:'remove-expense',payload:{id:expense.id}})}}
       destructive={true}
       >
         Eliminar
@@ -43,7 +45,7 @@ export default function ExpenseDetails({ expense }: ExpenseDetailsProps) {
 
     <SwipeableList>
       <SwipeableListItem
-      maxSwipe={30}
+      maxSwipe={1}
       leadingActions={leadingActions()}
       trailingActions={trailingActions()}
       
