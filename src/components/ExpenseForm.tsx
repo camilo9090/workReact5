@@ -1,7 +1,7 @@
 import { categories } from "../data/categories";
 import DatePicker from 'react-date-picker';
 import { DraftExpense, Value } from "../types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import 'react-calendar/dist/Calendar.css'
 import 'react-date-picker/dist/DatePicker.css'
 import ErrorMessage from "./ErrorMessage";
@@ -26,13 +26,26 @@ export default function ExpenseForm() {
 
     )
   }
-  const {dispatch}=useBudget()
-  const [error,seterror]=useState('')
+
+  //agregar o actualizar gasto
+  const { dispatch, state } = useBudget()
+  useEffect(() => {
+
+    if (state.editingId) {
+      const editingExpense = state.expense.filter(salida => salida.id === state.editingId)[0]
+      setexpense(editingExpense)
+    }
+
+  }, [state.editingId])
+  
+
+
+  const [error, seterror] = useState('')
   const handleChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
 
     const { name, value } = e.target
-    const isAmount=['amount'].includes(name)
-   
+    const isAmount = ['amount'].includes(name)
+
 
     setexpense({
       ...expense,
@@ -41,6 +54,7 @@ export default function ExpenseForm() {
 
 
   }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 
     e.preventDefault()
@@ -49,10 +63,9 @@ export default function ExpenseForm() {
     if (Object.values(expense).includes('')) {
       seterror('Todos los campos son obligatorios')
       return
-     
+
     }
-    //agregar nuevo gasto
-    dispatch({type:'add-expense',payload:{expense}})
+
     //reiniciar state
     setexpense({
       amount: 0,
@@ -61,20 +74,27 @@ export default function ExpenseForm() {
       date: new Date()
     })
 
+    if (state.editingId) {
+      dispatch({type:'update-expense',payload:{expense:{id:state.editingId,...expense}}})
+     
+     } else {  
+      //agregar nuevo gasto
+      dispatch({ type: 'add-expense', payload: { expense } }) 
+     } 
   }
-  
+
   return (
     <form className="space-y-5" action="" onSubmit={handleSubmit} >
 
 
-     <legend
+      <legend
         className="uppercase text-center text-2xl font-black border-b-4 
       py-2 border-blue-500"
       >Nuevo Gasto</legend>
 
-      {error&&<ErrorMessage>
+      {error && <ErrorMessage>
         {error}
-        </ErrorMessage>}
+      </ErrorMessage>}
       <div className="flex flex-col gap-2">
 
         <label className="text-xl" htmlFor="expenseName">
