@@ -4,7 +4,7 @@ import BudgetTracker from "./components/BudgetTracker"
 import ExpenseList from "./components/ExpenseList"
 import ExpenseModal from "./components/ExpenseModal"
 import { useBudget } from "./hooks/useBudget"
-import { useMemo } from "react"
+import { useMemo, useEffect } from "react"
 
 
 
@@ -13,8 +13,15 @@ function App() {
 
   const { state } = useBudget()
   const isValidBudget = useMemo(() => state.budget > 0, [state.budget])
+  
+  
+  useEffect(() => {
+    localStorage.setItem('budget', JSON.stringify(state.budget))
+    localStorage.setItem('expenses', JSON.stringify(state.expense))
+    
+  }, [state])
 
-
+  
   return (
     <>
       <header className="bg-blue-500 py-8 max-h-72">
@@ -35,7 +42,7 @@ function App() {
         <main className="max-w-3xl mx-auto py-10">
 
           <ExpenseModal />
-          <ExpenseList/>
+          <ExpenseList />
         </main>
 
       )

@@ -41,6 +41,7 @@ export default function ExpenseDetails({ expense }: ExpenseDetailsProps) {
       </SwipeAction>
     </TrailingActions>
   )
+
   return (
 
     <SwipeableList>
