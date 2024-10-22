@@ -11,10 +11,10 @@ import { useMemo } from "react";
 export default function BudgetTracker() {
 
 
-    const{state,disponible,gastoTotal}=useBudget()
+    const{state,disponible,gastoTotal,dispatch}=useBudget()
     const percentage=+((gastoTotal/ state.budget)*100).toFixed(2)
     const canRestart=()=>useMemo(()=>state.expense.length>0,[state.expense])
-    const {dispatch}=useBudget()
+    
 
   
 
